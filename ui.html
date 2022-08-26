@@ -1,0 +1,93 @@
+<div class="box">
+    <div class="row">
+        <p class="label">Active</p>
+
+        <div class="">
+            <div class="toggle" id="active">
+                <div class="path"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="row"></div> -->
+</div>
+
+<script>
+    let active = false;
+    let btnActive = document.getElementById("active");
+    btnActive.onclick = () => {
+        active = !active;
+        btnActive.classList.toggle("--active");
+
+        parent.postMessage({ pluginMessage: { type: "active", active } }, "*");
+    };
+
+    // document.getElementById("cancel").onclick = () => {
+    //     parent.postMessage({ pluginMessage: { type: "cancel" } }, "*");
+    // };
+</script>
+
+<style>
+    body {
+        margin: 0;
+    }
+
+    p {
+        margin: 0;
+    }
+
+    .box {
+        padding: 10px;
+    }
+
+    .row {
+        display: flex;
+        column-gap: 20px;
+        align-items: center;
+        height: 30px;
+        margin-bottom: 10px;
+    }
+
+    .row .label {
+    }
+
+    .row:last-child {
+        margin-bottom: 0;
+    }
+
+    .toggle {
+        position: relative;
+        width: 24px;
+        height: 12px;
+        border-radius: 12px;
+        background: #ccc;
+        border: 1px solid #ccc;
+        transition: background 0.1s ease-out;
+    }
+
+    .toggle .path {
+        position: absolute;
+        top: 1px;
+        left: 1px;
+        height: 10px;
+        width: 10px;
+        border-radius: 100%;
+        background: #fff;
+        box-sizing: border-box;
+        transition: all 0.1s ease-out;
+    }
+
+    .toggle.--active {
+        background: #0d99ff;
+        border-color: #0d99ff;
+    }
+
+    .toggle.--active .path {
+        left: calc(100% - 11px);
+    }
+
+    /* 
+    
+    
+    */
+</style>

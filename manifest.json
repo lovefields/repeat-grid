@@ -1,0 +1,11 @@
+{
+    "name": "Auto Grid XD",
+    "id": "1144791359028233999",
+    "api": "1.0.0",
+    "main": "code.js",
+    "editorType": ["figma"],
+    "ui": {
+        "main": "ui.html",
+        "notice": "notice.html"
+    }
+}
