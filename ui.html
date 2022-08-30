@@ -2,14 +2,14 @@
     <div class="row">
         <p class="label">Active</p>
 
-        <div class="">
+        <div class="value">
             <div class="toggle" id="active">
                 <div class="path"></div>
             </div>
         </div>
     </div>
 
-    <!-- <div class="row"></div> -->
+    <p id="notice">Now if you resize frame,<br />we made list in frame.</p>
 </div>
 
 <script>
@@ -18,13 +18,10 @@
     btnActive.onclick = () => {
         active = !active;
         btnActive.classList.toggle("--active");
+        document.getElementById("notice").classList.toggle("--active");
 
         parent.postMessage({ pluginMessage: { type: "active", active } }, "*");
     };
-
-    // document.getElementById("cancel").onclick = () => {
-    //     parent.postMessage({ pluginMessage: { type: "cancel" } }, "*");
-    // };
 </script>
 
 <style>
@@ -49,10 +46,21 @@
     }
 
     .row .label {
+        width: 50px;
     }
 
     .row:last-child {
         margin-bottom: 0;
+    }
+
+    #notice {
+        display: none;
+        height: 40px;
+        text-align: center;
+    }
+
+    #notice.--active {
+        display: block;
     }
 
     .toggle {
