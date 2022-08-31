@@ -44,20 +44,20 @@ setInterval(() => {
         let yNumber = Math.floor(nodeHeight / (childHeight + childY));
 
         let idx = 0;
-        if (xNumber > 1 && yNumber > 1) {
+        if (xNumber > 1 || yNumber > 1) {
             for (let i = 0; i < xNumber; i += 1) {
                 for (let j = 0; j < yNumber; j += 1) {
-                    if (i !== 0 || j !== 0) {
-                        idx += 1;
+                    if (!node.children[idx]) {
+                        let clone = childNode.clone();
+                        node.insertChild(idx, clone);
+                    }
 
-                        if (!node.children[idx]) {
-                            let clone = childNode.clone();
-                            node.insertChild(idx, clone);
-                        }
-
+                    if (idx !== 0) {
                         node.children[idx].setPluginData("i", String(i));
                         node.children[idx].setPluginData("j", String(j));
                     }
+
+                    idx += 1;
                 }
             }
         }
