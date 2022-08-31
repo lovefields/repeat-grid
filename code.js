@@ -62,15 +62,15 @@ setInterval(() => {
             }
         }
 
-        node.children.forEach((child, idx) => {
-            if (idx > 0) {
+        node.children.forEach((child, k) => {
+            if (k > 0) {
                 let i = parseInt(child.getPluginData("i"));
                 let j = parseInt(child.getPluginData("j"));
 
                 child.x = (childX + childWidth) * i + childX;
                 child.y = (childY + childHeight) * j + childY;
 
-                if (child.x + child.width > nodeWidth || child.y + child.height > nodeHeight) {
+                if (child.x + child.width > nodeWidth || child.y + child.height > nodeHeight || k > idx - 1) {
                     child.remove();
                 }
             }
