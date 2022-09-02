@@ -2,6 +2,8 @@
 
 let canUse = false;
 let active = false;
+let prexNumber = 0;
+let preyNumber = 0;
 
 figma.showUI(__uiFiles__.notice, { width: 300, height: 260 });
 
@@ -43,38 +45,44 @@ setInterval(() => {
         let xNumber = Math.floor(nodeWidth / (childWidth + childX));
         let yNumber = Math.floor(nodeHeight / (childHeight + childY));
 
-        let idx = 0;
-        if (xNumber > 1 || yNumber > 1) {
-            for (let i = 0; i < xNumber; i += 1) {
-                for (let j = 0; j < yNumber; j += 1) {
-                    if (!node.children[idx]) {
-                        let clone = childNode.clone();
-                        node.insertChild(idx, clone);
-                    }
+        if (xNumber !== prexNumber || yNumber !== preyNumber) {
+            let idx = 0;
 
-                    if (idx !== 0) {
-                        node.children[idx].setPluginData("i", String(i));
-                        node.children[idx].setPluginData("j", String(j));
-                    }
+            if (xNumber > 1 || yNumber > 1) {
+                for (let i = 0; i < xNumber; i += 1) {
+                    for (let j = 0; j < yNumber; j += 1) {
+                        if (!node.children[idx]) {
+                            let clone = childNode.clone();
+                            node.insertChild(idx, clone);
+                        }
 
-                    idx += 1;
+                        if (idx !== 0) {
+                            node.children[idx].setPluginData("i", String(i));
+                            node.children[idx].setPluginData("j", String(j));
+                        }
+
+                        idx += 1;
+                    }
                 }
             }
+
+            node.children.forEach((child, k) => {
+                if (k > 0) {
+                    let i = parseInt(child.getPluginData("i"));
+                    let j = parseInt(child.getPluginData("j"));
+
+                    child.x = (childX + childWidth) * i + childX;
+                    child.y = (childY + childHeight) * j + childY;
+
+                    if (child.x + child.width > nodeWidth || child.y + child.height > nodeHeight || k > idx - 1) {
+                        child.remove();
+                    }
+                }
+            });
+
+            prexNumber = xNumber;
+            preyNumber = yNumber;
         }
-
-        node.children.forEach((child, k) => {
-            if (k > 0) {
-                let i = parseInt(child.getPluginData("i"));
-                let j = parseInt(child.getPluginData("j"));
-
-                child.x = (childX + childWidth) * i + childX;
-                child.y = (childY + childHeight) * j + childY;
-
-                if (child.x + child.width > nodeWidth || child.y + child.height > nodeHeight || k > idx - 1) {
-                    child.remove();
-                }
-            }
-        });
     }
 }, 500);
 
