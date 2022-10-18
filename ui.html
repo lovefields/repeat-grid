@@ -15,7 +15,7 @@
                 <path class="path" d="M0 12V0h1v12H0zm3-9h6v6H3V3zm1 1v4h4V4H4zm7 8V0h1v12h-1z" fill-rule="evenodd"></path>
             </svg>
 
-            <input id="rowGap" type="text" class="input" value="20">
+            <input id="rowGap" type="text" class="input" value="20" />
         </label>
 
         <label class="right input-area">
@@ -23,7 +23,7 @@
                 <path class="path" d="M3 3h6v6H3V3zm1 1v4h4V4H4zm8 8H0v-1h12v1zm0-11H0V0h12v1z" fill-rule="evenodd"></path>
             </svg>
 
-            <input id="columnGap" type="text" class="input" value="20">
+            <input id="columnGap" type="text" class="input" value="20" />
         </label>
     </div>
 
@@ -33,10 +33,11 @@
 <script>
     let active = false;
     let btnActive = document.getElementById("active");
-    let rowGap = parseInt(document.getElementById("rowGap").value);
-    let columnGap = parseInt(document.getElementById("columnGap").value);
+    // let btnResort = document.getElementById("resort");
 
-    btnActive.onclick = () => {
+    btnActive.addEventListener("click", () => {
+        let rowGap = parseInt(document.getElementById("rowGap").value);
+        let columnGap = parseInt(document.getElementById("columnGap").value);
         active = !active;
         btnActive.classList.toggle("--active");
         document.getElementById("notice").classList.toggle("--active");
@@ -44,7 +45,11 @@
         parent.postMessage({ pluginMessage: { type: "active", active } }, "*");
         parent.postMessage({ pluginMessage: { type: "setRowGap", rowGap } }, "*");
         parent.postMessage({ pluginMessage: { type: "setColumnGap", columnGap } }, "*");
-    };
+    });
+
+    // btnResort.addEventListener("click", () => {
+    //     parent.postMessage({ pluginMessage: { type: "reSort" } }, "*");
+    // });
 </script>
 
 <style>

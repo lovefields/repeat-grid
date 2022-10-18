@@ -7,11 +7,10 @@
     "build": "tsc -p tsconfig.json",
     "watch": "npm run build -- --watch"
   },
-  "author": "",
-  "license": "",
+  "author": "Lovefields",
+  "license": "MIT",
   "devDependencies": {
     "@figma/plugin-typings": "*",
-    "@webpack-cli/generators": "^2.5.0",
     "typescript": "*"
   },
   "dependencies": {
