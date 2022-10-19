@@ -40,11 +40,20 @@
     let btnResort = document.getElementById("resort");
 
     btnActive.addEventListener("click", () => {
-        let rowGap = parseInt(document.getElementById("rowGap").value);
-        let columnGap = parseInt(document.getElementById("columnGap").value);
+        let rowInput = document.getElementById("rowGap");
+        let columnInput = document.getElementById("columnGap");
+        let rowGap = parseInt(rowInput.value);
+        let columnGap = parseInt(columnInput.value);
         active = !active;
         btnActive.classList.toggle("--active");
         document.getElementById("notice").classList.toggle("--active");
+        if (active == true) {
+            rowInput.disabled = true;
+            columnInput.disabled = true;
+        } else {
+            rowInput.disabled = false;
+            columnInput.disabled = false;
+        }
 
         parent.postMessage({ pluginMessage: { type: "active", active } }, "*");
         parent.postMessage({ pluginMessage: { type: "setRowGap", rowGap } }, "*");
