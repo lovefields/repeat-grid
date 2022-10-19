@@ -27,13 +27,17 @@
         </label>
     </div>
 
+    <div class="row">
+        <button id="resort">Pigma plugin API has some BUG. if you want re-sorting click this button.</button>
+    </div>
+
     <p id="notice">Now if you resize frame,<br />we made list in frame.</p>
 </div>
 
 <script>
     let active = false;
     let btnActive = document.getElementById("active");
-    // let btnResort = document.getElementById("resort");
+    let btnResort = document.getElementById("resort");
 
     btnActive.addEventListener("click", () => {
         let rowGap = parseInt(document.getElementById("rowGap").value);
@@ -47,9 +51,9 @@
         parent.postMessage({ pluginMessage: { type: "setColumnGap", columnGap } }, "*");
     });
 
-    // btnResort.addEventListener("click", () => {
-    //     parent.postMessage({ pluginMessage: { type: "reSort" } }, "*");
-    // });
+    btnResort.addEventListener("click", () => {
+        parent.postMessage({ pluginMessage: { type: "reSort" } }, "*");
+    });
 </script>
 
 <style>
