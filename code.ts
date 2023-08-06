@@ -1,139 +1,62 @@
-let canUse: boolean = false;
 let active: boolean = false;
-let preXNumber: number = 0;
-let preYNumber: number = 0;
+let preCount: number = 0;
 let rowGap: number = 0;
 let columnGap: number = 0;
+let limit: number = 0;
+let $target: FrameNode;
 
-figma.showUI(__uiFiles__.notice, { width: 300, height: 260 });
+figma.showUI(__uiFiles__.notice, { width: 462, height: 160 });
 
 figma.on("selectionchange", () => {
     const selection: Readonly<SceneNode[]> = figma.currentPage.selection;
-
-    active = false;
 
     if (selection.length === 1) {
         const node = selection[0];
 
         if (node.type === "FRAME") {
             if (node.children.length == 1) {
-                canUse = true;
-                figma.showUI(__uiFiles__.main, { width: 300, height: 210 });
+                $target = node;
+                active = true;
             } else {
-                canUse = false;
-                figma.showUI(__uiFiles__.notice, { width: 300, height: 260 });
+                active = false;
             }
         } else {
-            canUse = false;
-            figma.showUI(__uiFiles__.notice, { width: 300, height: 260 });
+            active = false;
         }
     } else {
-        canUse = false;
-        figma.showUI(__uiFiles__.notice, { width: 300, height: 260 });
+        active = false;
+    }
+
+    if (active === true) {
+        figma.showUI(__uiFiles__.main, { width: 420, height: 420 });
+    } else {
+        figma.showUI(__uiFiles__.notice, { width: 462, height: 160 });
     }
 });
 
-function isFrameNode(argument: any): argument is FrameNode {
-    return argument.type === "FRAME";
-}
+figma.on("documentchange", () => {
+    if (active === true) {
+        const child = $target.children[0];
 
-function creatAndSortLogic(xNumber: number, yNumber: number, curruntNode: FrameNode, childNode: any, childWidth: number, childHeight: number) {
-    let count = xNumber * yNumber;
-    let row = 0;
-    let col = 0;
-    let i = 0;
-    let childData: Array<object> = [];
 
-    for (let i = curruntNode.children.length; i < count; i += 1) {
-        let clone = childNode.clone();
-        curruntNode.insertChild(i, clone);
+
+        console.log($target.inferredAutoLayout);
+        // console.log("work?");
+        // console.log($target);
+        // console.log(child);
+        // console.log(rowGap);
+        // console.log(columnGap);
+        // console.log(limit);
     }
-
-    curruntNode.findChildren((child) => {
-        col = i % xNumber;
-
-        if (i !== 0 && col == 0) {
-            row += 1;
-        }
-
-        let x = (columnGap + childWidth) * col + columnGap;
-        let y = (rowGap + childHeight) * row + rowGap;
-
-        child.x = x;
-        child.y = y;
-        childData.push({
-            x: x,
-            y: y,
-        });
-
-        if (i > count) {
-            child.remove();
-        }
-
-        i += 1;
-        return true;
-    });
-
-    curruntNode.setPluginData("childData", JSON.stringify(childData));
-}
-
-function reSortLogic() {
-    const curruntNode = figma.currentPage.selection[0];
-
-    if (isFrameNode(curruntNode)) {
-        let pluginData = curruntNode.getPluginData("childData");
-
-        if (pluginData !== "") {
-            let data = JSON.parse(pluginData);
-            let i = 0;
-
-            curruntNode.findChildren((child) => {
-                child.x = data[i].x;
-                child.y = data[i].y;
-
-                i += 1;
-                return true;
-            });
-        }
-    }
-}
-
-setInterval(() => {
-    if (canUse && active) {
-        const curruntNode = figma.currentPage.selection[0];
-
-        if (isFrameNode(curruntNode)) {
-            const childNode = curruntNode.children[0];
-            let curruntNodeWidth = curruntNode.width;
-            let curruntNodeHeight = curruntNode.height;
-            let childWidth = childNode.width;
-            let childHeight = childNode.height;
-            let xNumber = Math.floor(curruntNodeWidth / (childWidth + columnGap));
-            let yNumber = Math.floor(curruntNodeHeight / (childHeight + rowGap));
-
-            if (xNumber !== preXNumber || yNumber !== preYNumber) {
-                creatAndSortLogic(xNumber, yNumber, curruntNode, childNode, childWidth, childHeight);
-
-                preXNumber = xNumber;
-                preYNumber = yNumber;
-            }
-        }
-    }
-}, 500);
+});
 
 figma.ui.onmessage = (msg) => {
-    switch (msg.type) {
-        case "active":
-            active = msg.active;
-            break;
-        case "setRowGap":
-            rowGap = msg.rowGap;
-            break;
-        case "setColumnGap":
-            columnGap = msg.columnGap;
-            break;
-        case "reSort":
-            reSortLogic();
-            break;
+    if (msg.type === "apply") {
+        rowGap = msg.data.row;
+        columnGap = msg.data.col;
+        limit = msg.data.limit;
     }
 };
+
+// 자식 요소 복제
+function sortChildObject() {}
