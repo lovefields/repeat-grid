@@ -28,26 +28,29 @@ figma.on("selectionchange", () => {
     }
 
     if (active === true) {
-        figma.showUI(__uiFiles__.main, { width: 420, height: 420 });
+        const child = $target.children[0];
+        const data = {
+            row: 0,
+            col: 0,
+        };
+
+        if ($target.layoutMode === "NONE") {
+            data.col = child.x;
+            data.row = child.y;
+        } else {
+            data.col = $target.itemSpacing;
+            data.row = $target.counterAxisSpacing ?? 0;
+        }
+
+        figma.showUI(__uiFiles__.main, { width: 420, height: 354 });
+        figma.ui.postMessage(data);
     } else {
         figma.showUI(__uiFiles__.notice, { width: 462, height: 160 });
     }
 });
 
 figma.on("documentchange", () => {
-    if (active === true) {
-        const child = $target.children[0];
-
-
-
-        console.log($target.inferredAutoLayout);
-        // console.log("work?");
-        // console.log($target);
-        // console.log(child);
-        // console.log(rowGap);
-        // console.log(columnGap);
-        // console.log(limit);
-    }
+    sortChildObject();
 });
 
 figma.ui.onmessage = (msg) => {
@@ -55,8 +58,58 @@ figma.ui.onmessage = (msg) => {
         rowGap = msg.data.row;
         columnGap = msg.data.col;
         limit = msg.data.limit;
+        sortChildObject();
     }
 };
 
 // 자식 요소 복제
-function sortChildObject() {}
+function sortChildObject() {
+    if (active === true) {
+        const child = $target.children[0];
+        const width = $target.width;
+        const height = $target.height;
+        const childWidth = child.width;
+        const childHeight = child.height;
+
+        if ($target.layoutMode === "NONE") {
+            $target.horizontalPadding = child.x;
+            $target.verticalPadding = child.y;
+        }
+
+        $target.layoutMode = "HORIZONTAL";
+        $target.layoutWrap = "WRAP";
+        $target.itemSpacing = columnGap;
+        $target.counterAxisSpacing = rowGap;
+
+        const x = Math.floor((width - $target.horizontalPadding * 2 + columnGap) / (childWidth + columnGap));
+        const y = Math.floor((height - $target.verticalPadding * 2 + rowGap) / (childHeight + rowGap));
+
+        // 이전 값과 다를경우
+        if (preCount !== x * y) {
+            for (let i = 0; i < x * y; i += 1) {
+                if (limit !== 0 && limit < i) {
+                    break;
+                }
+
+                if ($target.children[i] === undefined) {
+                    let copyObject = child.clone();
+                    $target.appendChild(copyObject);
+                }
+            }
+
+            $target.children.forEach((item, i) => {
+                if (i !== 0) {
+                    if (i >= x * y) {
+                        item.remove();
+                    }
+
+                    if (limit !== 0 && limit < i) {
+                        item.remove();
+                    }
+                }
+            });
+        }
+
+        preCount = x * y;
+    }
+}

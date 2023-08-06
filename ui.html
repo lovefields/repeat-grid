@@ -9,7 +9,7 @@
                     <path class="path" d="m22 9.5v13h-1v-13z"></path>
                     <path class="path" d="m17 12.5v7h-2v-7z"></path>
                 </svg>
-                Enter the horizontal gap to set.
+                Enter the horizontal spacing to set.
             </p>
             <input type="number" class="input input-column" min="0" value="0" />
         </div>
@@ -21,22 +21,28 @@
                     <path class="path" d="m12.5 15h7v2h-7z"></path>
                     <path class="path" d="m22.5 21h-13v1h13z"></path>
                 </svg>
-                Enter the vertical gap to set.
+                Enter the vertical spacing to set.
             </p>
             <input type="number" class="input input-row" min="0" value="0" />
         </div>
 
         <div class="row">
-            <p class="label"><span class="big">Limit</span> Enter the vertical gap to set.</p>
+            <p class="label"><span class="big">Limit</span> Enter the maximun Object count.</p>
             <input type="number" class="input input-limit" min="0" />
         </div>
     </div>
 
-    <button class="btn-apply">Apply</button>
+    <!-- <button class="btn-apply">Apply</button> -->
 </div>
 
 <script>
-    document.querySelector(".btn-apply").addEventListener("click", () => {
+    // document.querySelector(".btn-apply").addEventListener("click", () => {});
+
+    document.querySelector(".input-column").addEventListener("keyup", sendData);
+    document.querySelector(".input-row").addEventListener("keyup", sendData);
+    document.querySelector(".input-limit").addEventListener("keyup", sendData);
+
+    function sendData() {
         const col = document.querySelector(".input-column");
         const row = document.querySelector(".input-row");
         const limit = document.querySelector(".input-limit");
@@ -62,7 +68,19 @@
         }
 
         parent.postMessage({ pluginMessage: { type: "apply", data } }, "*");
-    });
+    }
+
+    // 데이터 수신
+    window.onmessage = (event) => {
+        if (event.data.pluginMessage !== "") {
+            const data = event.data.pluginMessage;
+
+            document.querySelector(".input-column").value = data.col;
+            document.querySelector(".input-row").value = data.row;
+
+            sendData();
+        }
+    };
 </script>
 
 <style>
