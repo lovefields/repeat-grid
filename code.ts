@@ -85,7 +85,7 @@ function sortChildObject() {
         const y = Math.floor((height - $target.verticalPadding * 2 + rowGap) / (childHeight + rowGap));
 
         // 이전 값과 다를경우
-        if (preCount !== x * y) {
+        // if (preCount !== x * y) {
             for (let i = 0; i < x * y; i += 1) {
                 if (limit !== 0 && limit < i) {
                     break;
@@ -108,7 +108,7 @@ function sortChildObject() {
                     }
                 }
             });
-        }
+        // }
 
         preCount = x * y;
     }
