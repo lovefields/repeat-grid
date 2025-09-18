@@ -1,11 +1,16 @@
 {
-  "name": "Repeat Grid",
-  "id": "1146242934742488044",
-  "api": "1.0.0",
-  "main": "code.js",
-  "editorType": ["figma"],
-  "ui": {
-      "main": "ui.html",
-      "notice": "notice.html"
-  }
+    "name": "Repeat Grid",
+    "id": "1146242934742488044",
+    "api": "1.0.0",
+    "main": "code.js",
+    "enableProposedApi": false,
+    "documentAccess": "dynamic-page",
+    "editorType": ["figma"],
+    "ui": {
+        "main": "ui.html",
+        "notice": "notice.html"
+    },
+    "networkAccess": {
+        "allowedDomains": ["none"]
+    }
 }

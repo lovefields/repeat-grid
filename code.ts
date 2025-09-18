@@ -1,5 +1,4 @@
 let active: boolean = false;
-let preCount: number = 0;
 let rowGap: number = 0;
 let columnGap: number = 0;
 let limit: number = 0;
@@ -49,7 +48,7 @@ figma.on("selectionchange", () => {
     }
 });
 
-figma.on("documentchange", () => {
+figma.currentPage.on("nodechange", () => {
     sortChildObject();
 });
 
@@ -72,8 +71,10 @@ function sortChildObject() {
         const childHeight = child.height;
 
         if ($target.layoutMode === "NONE") {
-            $target.horizontalPadding = child.x;
-            $target.verticalPadding = child.y;
+            $target.paddingLeft = child.x;
+            $target.paddingRight = child.x;
+            $target.paddingTop = child.y;
+            $target.paddingBottom = child.y;
         }
 
         $target.layoutMode = "HORIZONTAL";
@@ -81,35 +82,32 @@ function sortChildObject() {
         $target.itemSpacing = columnGap;
         $target.counterAxisSpacing = rowGap;
 
-        const x = Math.floor((width - $target.horizontalPadding * 2 + columnGap) / (childWidth + columnGap));
-        const y = Math.floor((height - $target.verticalPadding * 2 + rowGap) / (childHeight + rowGap));
+        const x = Math.floor((width - $target.paddingLeft * 2 + columnGap) / (childWidth + columnGap));
+        const y = Math.floor((height - $target.paddingTop * 2 + rowGap) / (childHeight + rowGap));
 
         // 이전 값과 다를경우
-        // if (preCount !== x * y) {
-            for (let i = 0; i < x * y; i += 1) {
-                if (limit !== 0 && limit < i) {
-                    break;
-                }
-
-                if ($target.children[i] === undefined) {
-                    let copyObject = child.clone();
-                    $target.appendChild(copyObject);
-                }
+        for (let i = 0; i < x * y; i += 1) {
+            if (limit !== 0 && limit < i) {
+                break;
             }
 
-            $target.children.forEach((item, i) => {
-                if (i !== 0) {
-                    if (i >= x * y) {
-                        item.remove();
-                    }
+            if ($target.children[i] === undefined) {
+                const copyObject = child.clone();
 
-                    if (limit !== 0 && limit < i) {
-                        item.remove();
-                    }
+                $target.appendChild(copyObject);
+            }
+        }
+
+        $target.children.forEach((item, i) => {
+            if (i !== 0) {
+                if (i >= x * y) {
+                    item.remove();
                 }
-            });
-        // }
 
-        preCount = x * y;
+                if (limit !== 0 && limit < i) {
+                    item.remove();
+                }
+            }
+        });
     }
 }
