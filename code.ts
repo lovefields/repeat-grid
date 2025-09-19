@@ -4,6 +4,8 @@ let columnGap: number = 0;
 let limit: number = 0;
 let $target: FrameNode;
 
+figma.loadAllPagesAsync();
+
 figma.showUI(__uiFiles__.notice, { width: 462, height: 160 });
 
 figma.on("selectionchange", () => {
@@ -48,7 +50,7 @@ figma.on("selectionchange", () => {
     }
 });
 
-figma.currentPage.on("nodechange", () => {
+figma.on("documentchange", () => {
     sortChildObject();
 });
 
